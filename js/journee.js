@@ -11,6 +11,11 @@
 
   Toucher le NOM d'une ligne ouvre la fenêtre de modification (js/lignes.js).
 
+  RÉORGANISER (v1.1) : le bouton "↕ Réorganiser les lignes" passe en mode
+  rangement. Chaque ligne affiche alors deux flèches ▲ ▼ à la place des
+  boutons ✓ / ✗. L'ordre choisi est enregistré tout de suite, et vaut
+  pour tous les jours (passés compris : seul l'affichage change, pas le score).
+
   Pour un jour PASSÉ, on affiche les lignes et points de ce jour-là
   (la "photo" de js/score.js) : changer une ligne aujourd'hui ne modifie
   pas les jours d'avant.
@@ -19,6 +24,15 @@
 // Les éléments de la page dont on a besoin.
 const champDate = document.getElementById("date-journee");
 const listeLignes = document.getElementById("liste-lignes");
+const boutonReorganiser = document.getElementById("bouton-reorganiser");
+const boutonAjouterLigne = document.getElementById("bouton-ajouter-ligne");
+const aideJournee = document.getElementById("aide-journee");
+
+// Vrai quand on est en train de ranger les lignes (flèches ▲ ▼ affichées).
+let modeRangement = false;
+
+// L'id de la ligne qu'on vient de déplacer (pour l'illuminer un instant).
+let idLigneDeplacee = null;
 
 // Le jour actuellement affiché (aujourd'hui au départ).
 let dateAffichee = dateDuJour();
@@ -48,6 +62,52 @@ function initialiserJournee() {
     }
   });
 
+  // Le bouton "Réorganiser" ↔ "Terminé"
+  boutonReorganiser.addEventListener("click", function () {
+    basculerRangement(!modeRangement);
+  });
+
+  afficherJournee();
+}
+
+/**
+ * Active (true) ou termine (false) le mode rangement.
+ */
+function basculerRangement(actif) {
+  modeRangement = actif;
+  // Le bouton change de texte et de couleur.
+  boutonReorganiser.textContent = actif ? "✓ Terminé" : "↕ Réorganiser les lignes";
+  boutonReorganiser.classList.toggle("actif", actif);
+  // Pendant le rangement, on cache le (+) et on change le texte d'aide.
+  boutonAjouterLigne.classList.toggle("cache", actif);
+  aideJournee.textContent = actif
+    ? "Utilise ▲ ▼ pour monter ou descendre une ligne, puis touche « Terminé »."
+    : "Touche le nom d'une ligne pour la modifier ou la supprimer.";
+  afficherJournee();
+}
+
+/**
+ * Déplace une ligne d'un cran vers le haut (-1) ou vers le bas (+1).
+ * On échange sa place avec la ligne visible voisine dans classeur.lignes
+ * (les lignes supprimées, invisibles, restent où elles sont).
+ */
+function deplacerLigne(idLigne, sens) {
+  const visibles = lignesVisibles(); // js/donnees.js
+  const position = visibles.findIndex(function (l) { return l.id === idLigne; });
+  const voisine = visibles[position + sens];
+  if (position === -1 || !voisine) {
+    return; // déjà tout en haut ou tout en bas
+  }
+
+  // indexOf donne la place de chaque ligne dans la liste complète.
+  const i = classeur.lignes.indexOf(visibles[position]);
+  const k = classeur.lignes.indexOf(voisine);
+  // On échange les deux lignes de place.
+  classeur.lignes[i] = voisine;
+  classeur.lignes[k] = visibles[position];
+
+  enregistrerClasseur();
+  idLigneDeplacee = idLigne;
   afficherJournee();
 }
 
@@ -102,7 +162,16 @@ function afficherJournee() {
   const jourPasseFige = Boolean(jour && jour.lignes && dateAffichee < dateDuJour());
   document.getElementById("note-jour-passe").classList.toggle("cache", !jourPasseFige);
 
-  // Les lignes de ce jour-là (photo pour un jour passé, lignes actuelles sinon).
+  // En mode rangement, on range les lignes ACTUELLES (pas la photo d'un jour passé).
+  listeLignes.classList.toggle("en-rangement", modeRangement);
+  if (modeRangement) {
+    document.getElementById("note-jour-passe").classList.add("cache");
+    afficherLignesARanger();
+    return;
+  }
+
+  // Les lignes de ce jour-là (photo pour un jour passé, lignes actuelles sinon),
+  // dans l'ordre que tu as choisi.
   lignesDuJour(dateAffichee).forEach(function (ligne) { // js/score.js
     // <li> = un élément de liste : une ligne de l'écran.
     const element = document.createElement("li");
@@ -170,6 +239,58 @@ function afficherJournee() {
 
     listeLignes.appendChild(element);
   });
+}
+
+/**
+ * Le mode rangement : chaque ligne avec son nom et deux flèches ▲ ▼.
+ */
+function afficherLignesARanger() {
+  const lignes = lignesVisibles(); // js/donnees.js
+
+  lignes.forEach(function (ligne, position) {
+    const element = document.createElement("li");
+    element.className = "ligne";
+    if (ligne.id === idLigneDeplacee) {
+      element.classList.add("vient-de-bouger");
+    }
+
+    // Le nom (pas cliquable pendant le rangement)
+    const zoneNom = document.createElement("button");
+    zoneNom.type = "button";
+    zoneNom.className = "ligne-nom";
+    zoneNom.disabled = true;
+    const nom = document.createElement("span");
+    nom.textContent = ligne.nom;
+    zoneNom.appendChild(nom);
+    element.appendChild(zoneNom);
+
+    // Les flèches : la 1re ligne ne peut pas monter, la dernière ne peut pas descendre.
+    const fleches = document.createElement("div");
+    fleches.className = "ligne-fleches";
+    fleches.appendChild(creerBoutonFleche(ligne, -1, position === 0));
+    fleches.appendChild(creerBoutonFleche(ligne, +1, position === lignes.length - 1));
+    element.appendChild(fleches);
+
+    listeLignes.appendChild(element);
+  });
+
+  idLigneDeplacee = null; // l'illumination ne se joue qu'une fois
+}
+
+/**
+ * Fabrique une flèche ▲ (sens -1) ou ▼ (sens +1).
+ */
+function creerBoutonFleche(ligne, sens, bloquee) {
+  const bouton = document.createElement("button");
+  bouton.type = "button";
+  bouton.className = "bouton-fleche";
+  bouton.textContent = sens < 0 ? "▲" : "▼";
+  bouton.setAttribute("aria-label", (sens < 0 ? "Monter " : "Descendre ") + ligne.nom);
+  bouton.disabled = bloquee;
+  bouton.addEventListener("click", function () {
+    deplacerLigne(ligne.id, sens);
+  });
+  return bouton;
 }
 
 /**

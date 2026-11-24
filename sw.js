@@ -21,7 +21,7 @@
 */
 
 // Le nom du cache : il change à chaque version de l'app.
-const VERSION_CACHE = "appplaisir-v1.0";
+const VERSION_CACHE = "appplaisir-v1.1";
 
 // Tous les fichiers dont l'app a besoin pour marcher sans internet.
 // "./" = la page d'accueil (index.html).

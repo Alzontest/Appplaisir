@@ -88,7 +88,11 @@
         <span class="bouton-ajouter-rond">+</span>
         <span>Ajouter une ligne</span>
       </button>
-      <p class="aide">Touche le nom d'une ligne pour la modifier ou la supprimer.</p>
+      <p id="aide-journee" class="aide">Touche le nom d'une ligne pour la modifier ou la supprimer.</p>
+      <!-- Le bouton qui active / termine le rangement des lignes (js/journee.js) -->
+      <button type="button" id="bouton-reorganiser" class="bouton-secondaire bouton-reorganiser">
+        ↕ Réorganiser les lignes
+      </button>
       <!-- Affiché seulement pour un jour passé (js/journee.js) -->
       <p id="note-jour-passe" class="note-jour-passe cache">
         Jour passé : ce sont les lignes et les points de ce jour-là.

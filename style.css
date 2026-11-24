@@ -431,6 +431,71 @@ body {
   color: var(--couleur-texte-doux);
 }
 
+/* ===== 5 ter. RÉORGANISER LES LIGNES (v1.1) ===== */
+
+/* Le bouton "↕ Réorganiser les lignes", sous l'aide */
+.bouton-reorganiser {
+  display: block;
+  margin: 14px auto 0;
+  padding: 0 18px;
+}
+
+/* En mode rangement, le bouton devient "✓ Terminé" en bleu plein */
+.bouton-reorganiser.actif {
+  border-color: var(--couleur-principale);
+  background: var(--couleur-principale);
+  color: var(--texte-sur-principale);
+}
+
+/* Pendant le rangement, le (+) est caché. Cette règle est plus précise
+   que ".bouton-ajouter { display: flex }", donc c'est elle qui gagne. */
+.bouton-ajouter.cache {
+  display: none;
+}
+
+/* Les deux flèches ▲ ▼ à droite de chaque ligne */
+.ligne-fleches {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* Une flèche : carré arrondi de 48 px, la bonne taille pour un pouce */
+.bouton-fleche {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 2px solid var(--couleur-principale);
+  background: var(--couleur-carte);
+  color: var(--couleur-principale);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* La première ligne ne peut pas monter, la dernière ne peut pas descendre */
+.bouton-fleche:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+/* En mode rangement, le nom n'est pas cliquable : on l'affiche normalement */
+.liste-lignes.en-rangement .ligne-nom:disabled {
+  opacity: 1;
+  cursor: default;
+  color: var(--couleur-texte);
+}
+
+/* La ligne qu'on vient de déplacer s'illumine un court instant */
+.ligne.vient-de-bouger {
+  animation: ligne-bouge 0.7s ease-out;
+}
+
+@keyframes ligne-bouge {
+  from { background: var(--teinte-fait-12); }
+  to   { background: transparent; }
+}
+
 /* ===== 5 bis. FENÊTRES (créer / modifier / confirmer) ===== */
 
 /* <dialog> : la fenêtre par-dessus la page */

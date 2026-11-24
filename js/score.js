@@ -175,9 +175,25 @@ function figerJoursPasses() {
 function lignesDuJour(date) {
   const jour = classeur.jours[date];
   if (jour && jour.lignes && date < dateDuJour()) {
-    return jour.lignes;
+    return rangerSelonOrdreActuel(jour.lignes);
   }
   return lignesVisibles();
+}
+
+/**
+ * Range une liste de lignes dans l'ordre actuel de classeur.lignes.
+ * Sert pour la "photo" d'un jour passé : elle garde ses lignes et ses
+ * points, mais s'affiche dans l'ordre que tu as choisi.
+ * Une ligne qui n'existe plus du tout va à la fin.
+ */
+function rangerSelonOrdreActuel(lignes) {
+  const ordre = classeur.lignes.map(function (l) { return l.id; });
+  function place(ligne) {
+    const p = ordre.indexOf(ligne.id);
+    return p === -1 ? ordre.length : p;
+  }
+  // slice() fait une copie : on ne touche pas à la photo enregistrée.
+  return lignes.slice().sort(function (a, b) { return place(a) - place(b); });
 }
 
 // ===================== LE SCORE =====================

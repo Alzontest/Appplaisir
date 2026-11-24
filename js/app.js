@@ -7,7 +7,7 @@
 */
 
 // Numéro de version de l'app. On le change à chaque étape.
-const VERSION = "v1.0";
+const VERSION = "v1.1";
 
 // ===== 1. Afficher la version =====
 // On cherche l'élément dont l'id est "version" et on écrit le texte dedans.
