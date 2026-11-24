@@ -1,0 +1,1852 @@
+/*
+  style.css — L'APPARENCE DE L'APP
+  "Mobile first" : on dessine d'abord pour un téléphone,
+  puis on ajuste pour les grands écrans tout en bas du fichier.
+*/
+
+/* ===== 1. LES COULEURS ET TAILLES DE BASE =====
+   Des "variables" : on définit une couleur une seule fois ici,
+   et on la réutilise partout. Pour changer le thème, on ne modifie que ce bloc. */
+:root {
+  --couleur-principale: #1e5fa8;   /* bleu : la couleur de l'app (provisoire) */
+  --couleur-fond: #f4f6f5;         /* fond général, gris très clair */
+  --couleur-carte: #ffffff;        /* fond des zones de contenu */
+  --couleur-texte: #1d2521;        /* texte principal */
+  --couleur-texte-doux: #6b7570;   /* texte secondaire */
+  --couleur-bordure: #dde2df;      /* traits de séparation */
+  --couleur-fait: #2e9e5b;         /* vert du bouton ✓ */
+  --couleur-pas-fait: #d64545;     /* rouge du bouton ✗ */
+  --couleur-depasse: #e08a1e;      /* orange : objectif dépassé */
+  --couleur-favori: #e0a800;       /* jaune doré de l'étoile ★ */
+  --couleur-moyen: #c99400;        /* jaune du score moyen (50 à 79) */
+  --hauteur-navigation: 68px;      /* hauteur de la barre du bas */
+
+  /* Le navigateur dessine ses propres éléments (date, barres de défilement…)
+     en clair OU en sombre selon le réglage du téléphone. */
+  color-scheme: light dark;
+
+  /* --- En-tête --- */
+  --couleur-entete: #1e5fa8;               /* fond du bandeau du haut */
+  --texte-entete: #ffffff;                 /* texte du bandeau du haut */
+  --fond-bouton-entete: rgba(255, 255, 255, 0.15); /* le rond du bouton 💾 */
+
+  /* --- Texte posé sur une couleur pleine --- */
+  --texte-sur-principale: #ffffff;         /* sur un bouton bleu */
+  --texte-sur-danger: #ffffff;             /* sur un bouton rouge */
+
+  /* --- Bandeau de rappel (jaune) --- */
+  --bandeau-fond: #fff4d6;
+  --bandeau-texte: #6b4e00;
+  --bandeau-bouton-fond: #6b4e00;
+  --bandeau-bouton-texte: #ffffff;
+  --bandeau-info-fond: #e3eefb;            /* bandeau bleu "Nouvelle version" */
+  --bandeau-info-texte: #12406f;
+
+  /* --- Ombres et fenêtres --- */
+  --ombre-carte: rgba(0, 0, 0, 0.08);
+  --ombre-fenetre: rgba(0, 0, 0, 0.25);
+  --fond-derriere-fenetre: rgba(0, 0, 0, 0.4); /* le fond assombri (::backdrop) */
+  --fond-survol: rgba(0, 0, 0, 0.05);      /* colonne touchée dans une courbe */
+
+  /* --- Textes d'état (sur un fond teinté) --- */
+  --texte-ok: #1d6b3d;
+  --texte-erreur: #a12c2c;
+  --texte-depasse: #8a4f00;
+  --couleur-placeholder: #b5bcb8;          /* le "X" gris des cases vides */
+
+  /* --- Teintes : la couleur d'un état, très diluée, pour les fonds.
+         Le nombre à la fin = l'opacité en % (12 = 0,12). --- */
+  --teinte-fait-10: rgba(46, 158, 91, 0.10);
+  --teinte-fait-12: rgba(46, 158, 91, 0.12);
+  --teinte-fait-16: rgba(46, 158, 91, 0.16);
+  --teinte-fait-18: rgba(46, 158, 91, 0.18);
+  --teinte-fait-30: rgba(46, 158, 91, 0.30);
+  --teinte-pas-fait-08: rgba(214, 69, 69, 0.08);
+  --teinte-pas-fait-10: rgba(214, 69, 69, 0.10);
+  --teinte-pas-fait-12: rgba(214, 69, 69, 0.12);
+  --teinte-pas-fait-14: rgba(214, 69, 69, 0.14);
+  --teinte-pas-fait-25: rgba(214, 69, 69, 0.25);
+  --teinte-depasse-12: rgba(224, 138, 30, 0.12);
+  --teinte-depasse-14: rgba(224, 138, 30, 0.14);
+  --teinte-moyen-10: rgba(201, 148, 0, 0.10);
+  --teinte-moyen-18: rgba(201, 148, 0, 0.18);
+  --teinte-favori-08: rgba(224, 168, 0, 0.08);
+  --teinte-favori-10: rgba(224, 168, 0, 0.10);
+
+  /* --- Graphiques et calendrier --- */
+  --graphique-grille: #e6e9e7;
+  --graphique-axe: #c9cfcb;
+  --rayure-claire: #eef0ef;                /* jour "non rempli" rayé */
+  --rayure-foncee: #dfe3e1;
+}
+
+/* ===== 1 bis. MODE NUIT =====
+   Si le téléphone (ou l'ordinateur) est réglé en mode sombre, on redéfinit
+   les MÊMES variables avec des couleurs sombres : tout le reste du fichier
+   suit automatiquement, sans rien changer d'autre.
+   Les couleurs vives sont un peu éclaircies pour rester lisibles sur fond sombre. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --couleur-principale: #6aa8ee;
+    --couleur-fond: #111513;
+    --couleur-carte: #1b201e;
+    --couleur-texte: #e7ece9;
+    --couleur-texte-doux: #a2aca7;
+    --couleur-bordure: #333b37;
+    --couleur-fait: #4cc37e;
+    --couleur-pas-fait: #f07070;
+    --couleur-depasse: #f2a54a;
+    --couleur-favori: #f2c230;
+    --couleur-moyen: #e3b53c;
+
+    --couleur-entete: #16385f;
+    --texte-entete: #ffffff;
+    --fond-bouton-entete: rgba(255, 255, 255, 0.12);
+
+    --texte-sur-principale: #0b1a2b;       /* texte foncé sur le bleu clair */
+    --texte-sur-danger: #2a0b0b;           /* texte foncé sur le rouge clair */
+
+    --bandeau-fond: #3a3014;
+    --bandeau-texte: #ffe3a3;
+    --bandeau-bouton-fond: #e3b53c;
+    --bandeau-bouton-texte: #241b00;
+    --bandeau-info-fond: #16304d;
+    --bandeau-info-texte: #cfe3fb;
+
+    --ombre-carte: rgba(0, 0, 0, 0.4);
+    --ombre-fenetre: rgba(0, 0, 0, 0.6);
+    --fond-derriere-fenetre: rgba(0, 0, 0, 0.65);
+    --fond-survol: rgba(255, 255, 255, 0.07);
+
+    --texte-ok: #8fe3b1;
+    --texte-erreur: #ffa3a3;
+    --texte-depasse: #ffc98a;
+    --couleur-placeholder: #6d7772;
+
+    /* Sur fond sombre, les teintes ont besoin d'un peu plus d'opacité pour se voir. */
+    --teinte-fait-10: rgba(76, 195, 126, 0.16);
+    --teinte-fait-12: rgba(76, 195, 126, 0.18);
+    --teinte-fait-16: rgba(76, 195, 126, 0.20);
+    --teinte-fait-18: rgba(76, 195, 126, 0.24);
+    --teinte-fait-30: rgba(76, 195, 126, 0.40);
+    --teinte-pas-fait-08: rgba(240, 112, 112, 0.14);
+    --teinte-pas-fait-10: rgba(240, 112, 112, 0.16);
+    --teinte-pas-fait-12: rgba(240, 112, 112, 0.18);
+    --teinte-pas-fait-14: rgba(240, 112, 112, 0.20);
+    --teinte-pas-fait-25: rgba(240, 112, 112, 0.35);
+    --teinte-depasse-12: rgba(242, 165, 74, 0.18);
+    --teinte-depasse-14: rgba(242, 165, 74, 0.20);
+    --teinte-moyen-10: rgba(227, 181, 60, 0.16);
+    --teinte-moyen-18: rgba(227, 181, 60, 0.24);
+    --teinte-favori-08: rgba(242, 194, 48, 0.12);
+    --teinte-favori-10: rgba(242, 194, 48, 0.16);
+
+    --graphique-grille: #2a312d;
+    --graphique-axe: #4a534e;
+    --rayure-claire: #252b28;
+    --rayure-foncee: #313935;
+  }
+}
+
+/* ===== 2. RÉGLAGES GÉNÉRAUX ===== */
+
+/* box-sizing : la taille d'un élément inclut ses marges intérieures.
+   Ça évite beaucoup de mauvaises surprises de mise en page. */
+* {
+  box-sizing: border-box;
+}
+
+/* L'écran ne doit JAMAIS bouger de gauche à droite :
+   on interdit tout débordement horizontal. On ne fait que descendre. */
+html,
+body {
+  overflow-x: clip;               /* "clip" bloque le défilement horizontal sans casser le "sticky" de l'en-tête */
+  max-width: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; /* police du téléphone */
+  font-size: 17px;                 /* assez gros pour être lu facilement */
+  background: var(--couleur-fond);
+  color: var(--couleur-texte);
+  /* On laisse de la place en bas pour que la barre de navigation
+     ne cache pas la fin du contenu */
+  padding-bottom: calc(var(--hauteur-navigation) + 16px);
+}
+
+/* ===== 3. EN-TÊTE ===== */
+.entete {
+  position: sticky;                /* reste collé en haut quand on fait défiler */
+  top: 0;
+  z-index: 10;                     /* passe au-dessus du contenu qui défile */
+  display: flex;                   /* titre et partie droite sur la même ligne */
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--couleur-entete);
+  color: var(--texte-entete);
+}
+
+.entete h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.version {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+/* La partie droite de l'en-tête : version + bouton 💾 */
+.entete-droite {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Le bouton 💾 : rond, discret, 44 px pour le pouce */
+.bouton-entete {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: var(--fond-bouton-entete);
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* ===== 3 bis. BANDEAU DE RAPPEL (sauvegarde du dimanche) ===== */
+.bandeau {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 12px 16px 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--bandeau-fond);             /* jaune pâle : attire l'œil sans alarmer */
+  color: var(--bandeau-texte);
+  font-size: 15px;
+}
+
+/* Sur ordinateur, le bandeau s'aligne sur la largeur du contenu */
+@media (min-width: 700px) {
+  .bandeau {
+    max-width: 568px;
+    margin: 12px auto 0;
+  }
+}
+
+.bandeau-bouton {
+  flex-shrink: 0;
+  min-height: 40px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 10px;
+  background: var(--bandeau-bouton-fond);
+  color: var(--bandeau-bouton-texte);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Le bandeau a besoin de "cache" plus fort que son display: flex */
+.bandeau.cache {
+  display: none;
+}
+
+/* ===== 4. CONTENU DES ONGLETS ===== */
+.contenu {
+  padding: 16px;
+}
+
+.onglet {
+  background: var(--couleur-carte);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 1px 3px var(--ombre-carte);
+}
+
+.onglet h2 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+.a-venir {
+  color: var(--couleur-texte-doux);
+}
+
+/* La classe "cache" rend un onglet invisible.
+   C'est js/app.js qui l'ajoute ou l'enlève. */
+.cache {
+  display: none;
+}
+
+/* ===== 5. ONGLET "MA JOURNÉE" ===== */
+
+/* Le choix du jour */
+.choix-date {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  color: var(--couleur-texte-doux);
+}
+
+.choix-date input {
+  flex: 1;                         /* le champ prend la place restante */
+  min-width: 0;                    /* l'autorise à rétrécir sur petit écran */
+  font: inherit;
+  padding: 8px 10px;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: 10px;
+  background: var(--couleur-carte);
+  color: var(--couleur-texte);
+}
+
+/* La liste : on enlève les puces et les marges par défaut des <ul> */
+.liste-lignes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Une ligne : le nom à gauche, les boutons à droite */
+.ligne {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--couleur-bordure);
+}
+
+.ligne:last-child {
+  border-bottom: none;
+}
+
+/* La zone du nom est un bouton (pour pouvoir la toucher),
+   mais on lui enlève l'apparence de bouton : elle ressemble à du texte. */
+.ligne-nom {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;          /* le nom, puis le coef en dessous */
+  align-items: flex-start;
+  gap: 2px;
+  padding: 4px 0;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  overflow-wrap: anywhere;         /* un nom très long passe à la ligne au lieu de déborder */
+}
+
+/* Le petit "coef 5" gris sous le nom */
+.ligne-coef {
+  font-size: 13px;
+  color: var(--couleur-texte-doux);
+}
+
+/* Texte gris de la ligne automatique (Diète) */
+.ligne-auto {
+  font-size: 14px;
+  color: var(--couleur-texte-doux);
+}
+
+.ligne-boutons {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;                  /* les boutons gardent toujours leur taille */
+}
+
+/* Les boutons ronds ✓ / ✗ : 48 px, la bonne taille pour un pouce */
+.bouton-reponse {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;              /* 50 % = un cercle parfait */
+  border: 3px solid currentColor;  /* l'anneau prend la couleur du texte */
+  background: transparent;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.35;                   /* pâle tant qu'il n'est pas choisi */
+}
+
+.bouton-reponse.fait {
+  color: var(--couleur-fait);
+}
+
+.bouton-reponse.pas-fait {
+  color: var(--couleur-pas-fait);
+}
+
+/* Le bouton choisi : bien visible, anneau coloré et fond teinté */
+.bouton-reponse.selectionne {
+  opacity: 1;
+}
+
+.bouton-reponse.fait.selectionne {
+  background: var(--teinte-fait-12);
+}
+
+.bouton-reponse.pas-fait.selectionne {
+  background: var(--teinte-pas-fait-12);
+}
+
+/* Le bouton ( + ) "Ajouter une ligne", centré sous la liste */
+.bouton-ajouter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 16px auto 4px;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 15px;
+  color: var(--couleur-principale);
+  cursor: pointer;
+}
+
+.bouton-ajouter-rond {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 3px solid var(--couleur-principale);
+  font-size: 30px;
+  line-height: 46px;               /* centre le + verticalement dans le rond */
+  text-align: center;
+}
+
+/* Petit texte d'aide gris */
+.aide {
+  margin: 4px 0 0;
+  font-size: 13px;
+  text-align: center;
+  color: var(--couleur-texte-doux);
+}
+
+/* ===== 5 bis. FENÊTRES (créer / modifier / confirmer) ===== */
+
+/* <dialog> : la fenêtre par-dessus la page */
+.fenetre {
+  width: min(92vw, 420px);         /* 92 % de l'écran, 420 px au maximum */
+  border: none;
+  border-radius: 16px;
+  padding: 20px;
+  background: var(--couleur-carte);
+  color: var(--couleur-texte);
+  box-shadow: 0 10px 30px var(--ombre-fenetre);
+}
+
+/* Le fond assombri derrière la fenêtre */
+.fenetre::backdrop {
+  background: var(--fond-derriere-fenetre);
+}
+
+.fenetre h3 {
+  margin: 0 0 16px;
+  font-size: 19px;
+}
+
+/* Un champ : son titre au-dessus, puis le contenu */
+.champ {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.champ-titre {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--couleur-texte-doux);
+}
+
+.champ input {
+  font: inherit;                   /* 17 px : évite le zoom automatique du téléphone */
+  padding: 10px 12px;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: 10px;
+  width: 100%;
+}
+
+/* Message d'erreur rouge sous le champ Nom */
+.erreur {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--couleur-pas-fait);
+}
+
+/* Aperçu "✓ Fait  ✗ Pas fait" */
+.apercu-reponse {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mini-rond {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  font-weight: 700;
+}
+
+.mini-rond.fait {
+  color: var(--couleur-fait);
+}
+
+.mini-rond.pas-fait {
+  color: var(--couleur-pas-fait);
+  margin-left: 12px;
+}
+
+/* Le compteur du coefficient : [ − ]  5  [ + ] */
+.compteur {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.compteur-bouton {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--couleur-principale);
+  background: none;
+  color: var(--couleur-principale);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.compteur-valeur {
+  min-width: 32px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* Les boutons du bas des fenêtres, côte à côte */
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.actions button {
+  flex: 1;                         /* même largeur pour les deux */
+}
+
+/* Styles communs à tous les boutons rectangulaires des fenêtres */
+.bouton-principal,
+.bouton-secondaire,
+.bouton-danger,
+.bouton-danger-plein {
+  min-height: 48px;
+  border-radius: 12px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bouton-principal {
+  border: none;
+  background: var(--couleur-principale);
+  color: var(--texte-sur-principale);
+}
+
+.bouton-secondaire {
+  border: 1px solid var(--couleur-bordure);
+  background: var(--couleur-carte);
+  color: var(--couleur-texte);
+}
+
+/* "Supprimer cette ligne" : discret (rouge sur blanc), séparé du reste */
+.bouton-danger {
+  width: 100%;
+  margin-top: 12px;
+  border: 1px solid var(--couleur-pas-fait);
+  background: none;
+  color: var(--couleur-pas-fait);
+}
+
+/* "Supprimer" dans la confirmation : bien visible (blanc sur rouge) */
+.bouton-danger-plein {
+  border: none;
+  background: var(--couleur-pas-fait);
+  color: var(--texte-sur-danger);
+}
+
+/* ===== 5 ter. FENÊTRE "SAUVEGARDE" ===== */
+.texte-doux {
+  margin: 0 0 16px;
+  color: var(--couleur-texte-doux);
+}
+
+/* Les gros boutons Exporter / Importer prennent toute la largeur */
+.bouton-large {
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* Message de réussite (vert) ou d'erreur (rouge) */
+.message {
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+.message-ok {
+  background: var(--teinte-fait-12);
+  color: var(--texte-ok);
+}
+
+.message-erreur {
+  background: var(--teinte-pas-fait-12);
+  color: var(--texte-erreur);
+}
+
+/* ===== 5 quater. ONGLET "NUTRITION" ===== */
+
+/* La ligne de saisie du haut : un cadre en pointillés = "à remplir" */
+.saisie-plat {
+  padding: 12px;
+  border: 2px dashed var(--couleur-bordure);
+  border-radius: 12px;
+}
+
+/* La case du nom d'un plat (saisie et liste) */
+.plat-nom {
+  width: 100%;
+  min-width: 0;
+  font: inherit;                   /* 17 px : évite le zoom automatique du téléphone */
+  padding: 8px 10px;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: 10px;
+  background: var(--couleur-carte);
+  color: var(--couleur-texte);
+}
+
+/* Les 4 cases kcal / Prot / Gluc / Lip côte à côte.
+   "grid" découpe la largeur en 4 colonnes égales (1fr = une part). */
+.plat-valeurs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* Une valeur : son petit titre au-dessus de sa case */
+.valeur {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.valeur span {
+  font-size: 12px;
+  color: var(--couleur-texte-doux);
+  text-align: center;
+}
+
+.valeur input {
+  width: 100%;
+  min-width: 0;
+  font: inherit;
+  padding: 8px 4px;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: 10px;
+  text-align: center;
+  background: var(--couleur-carte);
+  color: var(--couleur-texte);
+}
+
+/* Le "X" gris affiché dans une case vide */
+.valeur input::placeholder,
+.plat-nom::placeholder {
+  color: var(--couleur-placeholder);
+}
+
+.saisie-plat .bouton-ajouter {
+  margin-top: 12px;
+}
+
+.aucun-plat {
+  margin: 16px 0 0;
+  text-align: center;
+}
+
+/* La liste des plats */
+.liste-plats {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.plat {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--couleur-bordure);
+}
+
+/* Ligne 1 d'un plat : le nom prend la place, le 🗑 reste à droite */
+.plat-haut {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.plat-haut .plat-nom {
+  flex: 1;
+  border-color: transparent;       /* discret : ressemble à du texte… */
+  font-weight: 600;
+}
+
+.plat-haut .plat-nom:focus {
+  border-color: var(--couleur-bordure); /* …mais on voit la case quand on la modifie */
+}
+
+.plat-supprimer {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Les totaux, sous un trait épais */
+.totaux {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 3px solid var(--couleur-texte);
+}
+
+.totaux-principaux {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* Un total : gros chiffre, petit nom en dessous, dans un encadré */
+.total {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px;
+  border-radius: 12px;
+  background: var(--couleur-fond);
+}
+
+.total-valeur {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.total-nom {
+  font-size: 13px;
+  color: var(--couleur-texte-doux);
+  text-align: center;
+}
+
+.totaux-secondaires {
+  margin: 12px 0 0;
+  text-align: center;
+  color: var(--couleur-texte-doux);
+}
+
+/* ----- Objectifs de diète (v0.6) ----- */
+
+/* Le petit "objectif 1980 – 2420" sous un total */
+.total-objectif {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--couleur-texte-doux);
+  text-align: center;
+}
+
+/* Les encadrés colorés selon l'objectif :
+   une bordure + un fond très léger de la couleur de l'état */
+.total {
+  border: 2px solid transparent;
+}
+
+.total.etat-ok {
+  border-color: var(--couleur-fait);
+  background: var(--teinte-fait-10);
+}
+
+.total.etat-bas {
+  border-color: var(--couleur-pas-fait);
+  background: var(--teinte-pas-fait-10);
+}
+
+.total.etat-haut {
+  border-color: var(--couleur-depasse);
+  background: var(--teinte-depasse-12);
+}
+
+/* Le verdict "Diète tenue : OUI / NON" */
+.verdict {
+  margin: 14px 0 0;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 700;
+  background: var(--couleur-fond);
+  color: var(--couleur-texte-doux);
+}
+
+.verdict-oui {
+  background: var(--teinte-fait-12);
+  color: var(--texte-ok);
+}
+
+.verdict-non {
+  background: var(--teinte-pas-fait-12);
+  color: var(--texte-erreur);
+}
+
+/* Le rond ✓ / ✗ de la ligne Diète dans "Ma journée" :
+   même look que les boutons, mais ce n'est qu'un affichage */
+.verdict-rond {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: default;
+}
+
+/* Le titre "Historique" et la liste dans la fenêtre des objectifs */
+.sous-titre {
+  margin: 22px 0 6px;
+  font-size: 15px;
+  color: var(--couleur-texte-doux);
+}
+
+.historique-objectifs {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 14px;
+  color: var(--couleur-texte-doux);
+}
+
+.historique-objectifs li {
+  margin-bottom: 4px;
+}
+
+/* ----- Favoris (v0.7) ----- */
+
+.favoris {
+  margin-bottom: 14px;
+}
+
+.favoris-entete {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.favoris-titre {
+  font-weight: 600;
+}
+
+/* Un bouton qui ressemble à un lien (texte souligné, sans cadre) */
+.lien {
+  min-height: 40px;
+  padding: 0 4px;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 15px;
+  color: var(--couleur-principale);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Les pastilles passent à la ligne quand il n'y a plus de place
+   (flex-wrap) : jamais de défilement horizontal. */
+.pastilles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pastille {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 6px 12px;
+  border: 1px solid var(--couleur-favori);
+  border-radius: 14px;
+  background: var(--teinte-favori-08);
+  font: inherit;
+  color: var(--couleur-texte);
+  text-align: left;
+  cursor: pointer;
+}
+
+.pastille-nom {
+  font-size: 15px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.pastille-detail {
+  font-size: 12px;
+  color: var(--couleur-texte-doux);
+}
+
+/* Un texte d'aide aligné à gauche (au lieu de centré) */
+.aide-gauche {
+  text-align: left;
+}
+
+/* Le petit message "✓ Skyr ajouté" */
+.message-favori {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--teinte-fait-12);
+  color: var(--texte-ok);
+  font-size: 14px;
+}
+
+/* L'étoile d'un plat : ☆ grise, ★ dorée */
+.plat-favori {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  font-size: 24px;
+  color: var(--couleur-texte-doux);
+  cursor: pointer;
+}
+
+.plat-favori.est-favori {
+  color: var(--couleur-favori);
+}
+
+/* La liste de la fenêtre "Gérer mes favoris" */
+.liste-gestion-favoris {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gestion-favori {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--couleur-bordure);
+}
+
+.gestion-favori-texte {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gestion-favori-texte span {
+  font-size: 13px;
+  color: var(--couleur-texte-doux);
+}
+
+/* ----- Quantité d'un plat (v0.7.1) ----- */
+
+/* La petite case "× 1" sous les cases d'un plat */
+.plat-quantite {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--couleur-texte-doux);
+  font-weight: 600;
+}
+
+.plat-quantite input {
+  width: 48px;
+  font: inherit;
+  padding: 8px 4px;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: 10px;
+  text-align: center;
+  color: var(--couleur-texte);
+  background: var(--couleur-carte);
+}
+
+/* La ligne 3 d'un plat : "× [1,5]" puis "= 247,5 kcal · …" */
+.plat-bas {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Le texte à droite de la quantité : gris "quantité" quand × 1… */
+.plat-reel {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  color: var(--couleur-texte-doux);
+}
+
+/* …et mis en avant quand la quantité n'est pas 1 */
+.plat-reel-actif {
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--couleur-fond);
+  color: var(--couleur-texte);
+}
+
+/* ----- Favoris améliorés (v0.7.2) ----- */
+
+/* Les suggestions sous "Nom du plat" */
+.suggestions {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 4px;
+  border: 1px solid var(--couleur-favori);
+  border-radius: 12px;
+  background: var(--couleur-carte);
+}
+
+.suggestion {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 44px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  font: inherit;
+  color: var(--couleur-texte);
+  text-align: left;
+  cursor: pointer;
+}
+
+.suggestion:hover,
+.suggestion:focus {
+  background: var(--teinte-favori-10);
+}
+
+.suggestion-nom {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.suggestion-detail {
+  font-size: 12px;
+  color: var(--couleur-texte-doux);
+}
+
+/* La barre de recherche de la fenêtre */
+.recherche {
+  width: 100%;
+  font: inherit;
+  padding: 10px 12px;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: 10px;
+}
+
+/* Le choix du tri : deux boutons "pilule" */
+.choix-tri {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0 6px;
+  font-size: 14px;
+  color: var(--couleur-texte-doux);
+}
+
+.bouton-tri {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: 18px;
+  background: var(--couleur-carte);
+  font: inherit;
+  font-size: 14px;
+  color: var(--couleur-texte);
+  cursor: pointer;
+}
+
+.bouton-tri.actif {
+  border-color: var(--couleur-principale);
+  background: var(--couleur-principale);
+  color: var(--texte-sur-principale);
+}
+
+/* La fenêtre peut devenir longue : la liste défile à l'intérieur */
+.liste-gestion-favoris {
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+/* Les petits boutons ronds ＋ ✎ 🗑 d'un favori */
+.petit-bouton {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: 50%;
+  background: var(--couleur-carte);
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.petit-bouton-ajouter {
+  border-color: var(--couleur-principale);
+  color: var(--couleur-principale);
+  font-weight: 700;
+}
+
+/* Un favori en cours de modification */
+.edition-favori {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--couleur-bordure);
+}
+
+.edition-favori .actions {
+  margin-top: 10px;
+}
+
+/* ----- Jours passés dans "Ma journée" (v0.8) ----- */
+.note-jour-passe {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--couleur-fond);
+  font-size: 13px;
+  color: var(--couleur-texte-doux);
+}
+
+/* Le nom d'une ligne supprimée depuis : visible mais plus modifiable */
+.ligne-nom:disabled {
+  cursor: default;
+  color: var(--couleur-texte-doux);
+}
+
+/* ===== 5 quinquies. ONGLET "BILAN DU JOUR" (v0.8) ===== */
+
+/* La carte du score : grand chiffre, couleur selon le niveau */
+.carte-score {
+  padding: 16px;
+  border-radius: 14px;
+  border: 2px solid var(--couleur-bordure);
+  background: var(--couleur-fond);
+  text-align: center;
+}
+
+.carte-score.niveau-vert {
+  border-color: var(--couleur-fait);
+  background: var(--teinte-fait-10);
+}
+
+.carte-score.niveau-jaune {
+  border-color: var(--couleur-moyen);
+  background: var(--teinte-moyen-10);
+}
+
+.carte-score.niveau-rouge {
+  border-color: var(--couleur-pas-fait);
+  background: var(--teinte-pas-fait-08);
+}
+
+.score-ligne {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+}
+
+.score-valeur {
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.score-sur {
+  font-size: 20px;
+  color: var(--couleur-texte-doux);
+}
+
+.score-medaille {
+  font-size: 36px;
+}
+
+.score-texte {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--couleur-texte-doux);
+}
+
+/* La série */
+.serie {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 15px;
+  color: var(--couleur-texte-doux);
+}
+
+.serie-active {
+  font-weight: 700;
+  color: var(--couleur-texte);
+}
+
+/* Les petits titres des blocs */
+.titre-bloc {
+  margin: 22px 0 8px;
+  font-size: 16px;
+}
+
+/* Le détail par ligne */
+.detail-score {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.detail-ligne {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--couleur-bordure);
+}
+
+.detail-ligne:last-child {
+  border-bottom: none;
+}
+
+.mini-rond.neutre {
+  color: var(--couleur-texte-doux);
+}
+
+/* Dans le détail, tous les ronds sont alignés et gardent leur taille */
+.detail-ligne .mini-rond {
+  flex-shrink: 0;
+  margin-left: 0;
+}
+
+.detail-texte {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-wrap: anywhere;
+}
+
+.detail-raison {
+  font-size: 12px;
+  color: var(--couleur-texte-doux);
+}
+
+.detail-points {
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+/* La nutrition du jour */
+.nutri-ligne {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--couleur-bordure);
+}
+
+.nutri-ligne > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.nutri-titre {
+  font-weight: 600;
+}
+
+.nutri-valeur {
+  font-size: 13px;
+  color: var(--couleur-texte-doux);
+}
+
+/* L'étiquette d'état : symbole + mot, sur un fond léger de la couleur d'état */
+.etiquette-etat {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.etiquette-etat.etat-ok {
+  background: var(--teinte-fait-12);
+  color: var(--texte-ok);
+}
+
+.etiquette-etat.etat-bas {
+  background: var(--teinte-pas-fait-12);
+  color: var(--texte-erreur);
+}
+
+.etiquette-etat.etat-haut {
+  background: var(--teinte-depasse-14);
+  color: var(--texte-depasse);
+}
+
+/* ----- Le graphique (SVG) ----- */
+.svg-graphique {
+  display: block;
+  width: 100%;                     /* s'adapte à la largeur de l'écran */
+  height: auto;
+}
+
+/* La bande de l'objectif : vert très pâle */
+.graphique-bande {
+  fill: var(--teinte-fait-16);
+}
+
+/* Les repères : discrets */
+.graphique-grille {
+  stroke: var(--graphique-grille);
+  stroke-width: 1;
+}
+
+.graphique-axe {
+  stroke: var(--graphique-axe);
+  stroke-width: 1;
+}
+
+.graphique-texte {
+  font-size: 11px;
+  fill: var(--couleur-texte-doux);
+}
+
+.graphique-texte-fort {
+  font-weight: 700;
+  fill: var(--couleur-texte);
+}
+
+/* La courbe : fine (2 px), couleur de l'app, bouts arrondis */
+.graphique-ligne {
+  fill: none;
+  stroke: var(--couleur-principale);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/* Les points, entourés d'un anneau blanc pour se détacher de la bande */
+.graphique-point {
+  fill: var(--couleur-principale);
+  stroke: var(--couleur-carte);
+  stroke-width: 2;
+}
+
+/* La zone à toucher : invisible, légèrement grisée quand elle est choisie */
+.graphique-zone {
+  fill: transparent;
+  cursor: pointer;
+}
+
+.graphique-zone-active {
+  fill: var(--fond-survol);
+}
+
+.legende-graphique {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--couleur-texte-doux);
+}
+
+.pastille-legende {
+  display: inline-block;
+  width: 14px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--teinte-fait-30);
+}
+
+.info-graphique {
+  margin: 6px 0 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--couleur-fond);
+  font-size: 14px;
+}
+
+/* ===== 5 sexies. ONGLET "HISTORIQUE" (v0.9) ===== */
+
+/* Le choix de l'échelle : 3 boutons "pilule" côte à côte */
+.choix-echelle {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.bouton-echelle {
+  min-height: 44px;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: 22px;
+  background: var(--couleur-carte);
+  font: inherit;
+  font-size: 15px;
+  color: var(--couleur-texte);
+  cursor: pointer;
+}
+
+/* Les boutons Trajectoire / Maintien de la fenêtre du poids : même style */
+.choix-mode {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.bouton-mode {
+  min-height: 44px;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: 22px;
+  background: var(--couleur-carte);
+  font: inherit;
+  font-size: 15px;
+  color: var(--couleur-texte);
+  cursor: pointer;
+}
+
+.bouton-mode.actif,
+.bouton-echelle.actif {
+  border-color: var(--couleur-principale);
+  background: var(--couleur-principale);
+  color: var(--texte-sur-principale);
+  font-weight: 600;
+}
+
+/* ◁ titre ▷ */
+.navigation-periode {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.bouton-periode {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: 50%;
+  background: var(--couleur-carte);
+  font-size: 18px;
+  color: var(--couleur-principale);
+  cursor: pointer;
+}
+
+.bouton-periode:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.titre-periode {
+  flex: 1;
+  text-align: center;
+  font-weight: 700;
+}
+
+.resume-details {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--couleur-texte-doux);
+}
+
+/* Le calendrier : une grille de 7 colonnes (jours) ou de 4 colonnes (mois) */
+.calendrier {
+  display: grid;
+  gap: 4px;
+}
+
+.calendrier-jours {
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.calendrier-annee {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.cal-entete {
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--couleur-texte-doux);
+}
+
+/* Une case (jour ou mois) */
+.cal-jour,
+.cal-mois {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 44px;
+  padding: 2px;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: 8px;
+  background: var(--couleur-carte);
+  font: inherit;
+  color: var(--couleur-texte);
+  cursor: pointer;
+}
+
+.cal-mois {
+  min-height: 54px;
+}
+
+.cal-numero {
+  font-size: 12px;
+  color: var(--couleur-texte-doux);
+}
+
+.cal-score {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Les couleurs des cases : mêmes niveaux que le score */
+.cal-jour.niveau-vert,
+.cal-mois.niveau-vert,
+.carre.niveau-vert {
+  border-color: var(--couleur-fait);
+  background: var(--teinte-fait-18);
+}
+
+.cal-jour.niveau-jaune,
+.cal-mois.niveau-jaune,
+.carre.niveau-jaune {
+  border-color: var(--couleur-moyen);
+  background: var(--teinte-moyen-18);
+}
+
+.cal-jour.niveau-rouge,
+.cal-mois.niveau-rouge,
+.carre.niveau-rouge {
+  border-color: var(--couleur-pas-fait);
+  background: var(--teinte-pas-fait-14);
+}
+
+/* Non rempli : gris rayé (compte 0) */
+.cal-non-rempli {
+  border-color: var(--couleur-placeholder);
+  background: repeating-linear-gradient(45deg, var(--rayure-claire), var(--rayure-claire) 4px, var(--rayure-foncee) 4px, var(--rayure-foncee) 8px);
+}
+
+/* Avant le premier jour ou dans le futur : à peine visible */
+.cal-hors {
+  border-style: dashed;
+  opacity: 0.45;
+}
+
+.cal-jour:disabled {
+  cursor: default;
+}
+
+/* Aujourd'hui pas encore rempli */
+.cal-en-cours {
+  border-style: dashed;
+}
+
+/* Aujourd'hui : un contour épais pour le repérer */
+.cal-aujourdhui {
+  outline: 2px solid var(--couleur-principale);
+  outline-offset: 1px;
+}
+
+/* La légende du calendrier */
+.legende-calendrier {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--couleur-texte-doux);
+}
+
+.carre {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 1px solid;
+  border-radius: 4px;
+}
+
+/* La réussite par ligne : nom + chiffres, puis une barre fine */
+.stats-lignes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.stat-ligne {
+  padding: 8px 0;
+}
+
+.stat-haut {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.stat-nom {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.stat-chiffres {
+  flex-shrink: 0;
+  font-size: 13px;
+  color: var(--couleur-texte-doux);
+}
+
+.stat-barre {
+  height: 8px;
+  margin-top: 6px;
+  border-radius: 4px;
+  background: var(--couleur-fond);
+  overflow: hidden;
+}
+
+.stat-barre-remplie {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--couleur-principale);
+}
+
+.stats-nutrition {
+  margin: 0;
+}
+
+/* ===== 5 septies. ONGLET "POIDS" (v0.9.1) ===== */
+
+/* La saisie : même cadre en pointillés que la saisie d'un plat */
+.saisie-poids {
+  padding: 12px;
+  border: 2px dashed var(--couleur-bordure);
+  border-radius: 12px;
+}
+
+.saisie-poids .champ {
+  margin-top: 0;
+}
+
+.saisie-poids .actions {
+  margin-top: 12px;
+}
+
+/* La carte du verdict : grand poids, étiquette d'état, détails */
+.verdict-poids {
+  margin-top: 14px;
+}
+
+.carte-poids {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px;
+  border: 2px solid var(--couleur-bordure);
+  border-radius: 14px;
+  background: var(--couleur-fond);
+  text-align: center;
+}
+
+.carte-poids.niveau-vert {
+  border-color: var(--couleur-fait);
+  background: var(--teinte-fait-10);
+}
+
+.carte-poids.niveau-rouge {
+  border-color: var(--couleur-pas-fait);
+  background: var(--teinte-pas-fait-08);
+}
+
+.poids-valeur {
+  margin: 0;
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.poids-details {
+  margin: 0;
+  font-size: 14px;
+  color: var(--couleur-texte-doux);
+}
+
+/* ----- Objectif de poids à 2 modes (v0.9.2) ----- */
+
+/* .champ déclare "display: flex" APRÈS .cache : il faut une règle plus précise
+   pour pouvoir cacher les champs propres à la trajectoire. */
+.champ.cache {
+  display: none;
+}
+
+/* Un champ en erreur : entouré de rouge */
+.champ-erreur {
+  border-color: var(--couleur-pas-fait) !important;
+  box-shadow: 0 0 0 2px var(--teinte-pas-fait-25);
+}
+
+/* L'aperçu de l'objectif : bien visible */
+.apercu-objectif {
+  margin: 12px 0 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--couleur-fond);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.apercu-objectif:empty {
+  display: none;
+}
+
+/* La trajectoire prévue : pointillés gris foncé, sous les points */
+.graphique-prevue {
+  fill: none;
+  stroke: var(--couleur-texte-doux);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+}
+
+/* Sa légende : un petit trait pointillé */
+.trait-legende {
+  display: inline-block;
+  width: 16px;
+  margin-left: 10px;
+  border-top: 2px dashed var(--couleur-texte-doux);
+  vertical-align: middle;
+}
+
+/* ----- Niveaux d'importance et champs en mode nuit (v0.9.3) ----- */
+
+/* "Niveau 4 · vaut 10 points" sous le compteur */
+.explication-niveau {
+  margin: 8px 0 0;
+  font-weight: 600;
+  color: var(--couleur-principale);
+}
+
+/* Toutes les cases de saisie prennent les couleurs du thème
+   (sinon, en mode nuit, certaines resteraient blanches). */
+input {
+  background-color: var(--couleur-carte);
+  color: var(--couleur-texte);
+}
+
+/* ----- App installable (v0.9.5) ----- */
+
+/* Le bandeau bleu "✨ Nouvelle version prête" (même forme que le bandeau jaune) */
+.bandeau-info {
+  background: var(--bandeau-info-fond);
+  color: var(--bandeau-info-texte);
+}
+
+.bandeau-info .bandeau-bouton {
+  background: var(--couleur-principale);
+  color: var(--texte-sur-principale);
+}
+
+/* L'état de la protection du stockage, dans la fenêtre Sauvegarde */
+.etat-protection {
+  margin: -8px 0 14px;
+  font-size: 13px;
+  color: var(--couleur-texte-doux);
+}
+
+.etat-protection-ok {
+  color: var(--texte-ok);
+}
+
+/* ===== 6. BARRE DE NAVIGATION DU BAS ===== */
+.navigation {
+  position: fixed;                 /* toujours visible en bas de l'écran */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--hauteur-navigation);
+  display: flex;                   /* les 3 boutons côte à côte */
+  background: var(--couleur-carte);
+  border-top: 1px solid var(--couleur-bordure);
+}
+
+.bouton-onglet {
+  flex: 1;                         /* chaque bouton prend 1/5 de la largeur */
+  min-width: 0;
+  display: flex;
+  flex-direction: column;          /* icône au-dessus du texte */
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 0 2px;
+  border: none;
+  background: none;
+  font-size: 12px;                 /* 5 boutons : un peu plus petit pour que tout tienne */
+  white-space: nowrap;
+  color: var(--couleur-texte-doux);
+  cursor: pointer;
+}
+
+.bouton-onglet .icone {
+  font-size: 22px;
+}
+
+/* Le bouton de l'onglet affiché est mis en avant */
+.bouton-onglet.actif {
+  color: var(--couleur-principale);
+  font-weight: 600;
+}
+
+/* ===== 7. GRANDS ÉCRANS (ordinateur) =====
+   Au-delà de 700 px de large, on centre le contenu
+   pour qu'il ne s'étale pas sur tout l'écran. */
+@media (min-width: 700px) {
+  .contenu,
+  .navigation {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}

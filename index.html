@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<!--
+  index.html — LA STRUCTURE DE L'APP
+  Ce fichier décrit CE QU'IL Y A sur la page (titres, zones, boutons).
+  L'apparence est dans style.css, le comportement dans les fichiers du dossier js/.
+-->
+<html lang="fr">
+<head>
+  <!-- Encodage des caractères : permet d'afficher les accents correctement -->
+  <meta charset="UTF-8">
+
+  <!-- Indispensable sur téléphone : la page s'adapte à la largeur de l'écran
+       au lieu d'afficher une version "ordinateur" minuscule -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Mode nuit : l'app suit le réglage clair / sombre du téléphone,
+       y compris pour les éléments du navigateur (champ date…) -->
+  <meta name="color-scheme" content="light dark">
+
+  <!-- Titre affiché dans l'onglet du navigateur -->
+  <title>Appplaisir</title>
+
+  <!-- ===== L'APP INSTALLABLE (v0.9.5) =====
+       Le manifest est la "carte d'identité" de l'app : son nom, son icône,
+       et le fait qu'elle s'ouvre en plein écran comme une vraie appli. -->
+  <link rel="manifest" href="manifest.json">
+  <!-- La petite icône dans l'onglet du navigateur -->
+  <link rel="icon" type="image/png" sizes="32x32" href="icones/favicon-32.png">
+  <link rel="apple-touch-icon" href="icones/icone-192.png">
+  <!-- La couleur de la barre du téléphone (en haut), en clair et en sombre -->
+  <meta name="theme-color" content="#1e5fa8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#16385f" media="(prefers-color-scheme: dark)">
+
+  <!-- On relie la feuille de style (l'apparence) -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- ===== EN-TÊTE : le bandeau en haut de l'écran ===== -->
+  <header class="entete">
+    <h1>Appplaisir</h1>
+    <div class="entete-droite">
+      <!-- Le numéro de version est écrit ici par js/app.js -->
+      <span id="version" class="version"></span>
+      <!-- Le bouton 💾 ouvre la fenêtre "Sauvegarde" (js/sauvegarde.js) -->
+      <button type="button" id="bouton-sauvegarde" class="bouton-entete" aria-label="Sauvegarde">💾</button>
+    </div>
+  </header>
+
+  <!-- ===== BANDEAU DE RAPPEL : la sauvegarde du dimanche =====
+       Caché au départ ; js/sauvegarde.js l'affiche quand un export est à faire. -->
+  <div id="bandeau-export" class="bandeau cache">
+    <span>💾 Sauvegarde de la semaine à faire</span>
+    <button type="button" id="bandeau-exporter" class="bandeau-bouton">Exporter</button>
+  </div>
+
+  <!-- ===== BANDEAU "NOUVELLE VERSION" (js/mise-a-jour.js) =====
+       Apparaît quand une mise à jour de l'app est téléchargée et prête. -->
+  <div id="bandeau-mise-a-jour" class="bandeau bandeau-info cache">
+    <span>✨ Nouvelle version prête</span>
+    <button type="button" id="bouton-mise-a-jour" class="bandeau-bouton">Recharger</button>
+  </div>
+
+  <!-- ===== CONTENU : les 5 onglets =====
+       Les 5 sections existent toujours dans la page,
+       mais une seule est visible à la fois (les autres ont la classe "cache"). -->
+  <main class="contenu">
+
+    <!-- Onglet 1 : Journée -->
+    <section id="onglet-journee" class="onglet">
+      <h2>📋 Ma journée</h2>
+
+      <!-- Le choix du jour : aujourd'hui par défaut (rempli par js/journee.js).
+           On peut choisir une autre date pour remplir un jour oublié. -->
+      <label class="choix-date">
+        <span>Jour :</span>
+        <input type="date" id="date-journee">
+      </label>
+
+      <!-- La liste des lignes (Sport, 10 000 pas, Diète…).
+           Elle est vide ici : c'est js/journee.js qui la remplit
+           à partir des lignes enregistrées dans l'app. -->
+      <ul id="liste-lignes" class="liste-lignes"></ul>
+
+      <!-- Le bouton ( + ) pour créer une nouvelle ligne (géré par js/lignes.js) -->
+      <button type="button" id="bouton-ajouter-ligne" class="bouton-ajouter">
+        <span class="bouton-ajouter-rond">+</span>
+        <span>Ajouter une ligne</span>
+      </button>
+      <p class="aide">Touche le nom d'une ligne pour la modifier ou la supprimer.</p>
+      <!-- Affiché seulement pour un jour passé (js/journee.js) -->
+      <p id="note-jour-passe" class="note-jour-passe cache">
+        Jour passé : ce sont les lignes et les points de ce jour-là.
+        Ajouter ou modifier une ligne vaut pour aujourd'hui et la suite.
+      </p>
+    </section>
+
+    <!-- Onglet 2 : Nutrition (caché au démarrage) -->
+    <section id="onglet-nutrition" class="onglet cache">
+      <h2>🍽️ Nutrition</h2>
+
+      <!-- Le même jour que dans "Ma journée" : changer l'un change l'autre -->
+      <label class="choix-date">
+        <span>Jour :</span>
+        <input type="date" id="date-nutrition">
+      </label>
+
+      <!-- ===== LES FAVORIS : une touche = le plat est ajouté au jour =====
+           Les pastilles sont créées par js/favoris.js. -->
+      <div class="favoris">
+        <div class="favoris-entete">
+          <span class="favoris-titre">⭐ Favoris</span>
+          <!-- Le texte "Tous mes favoris (N)" est écrit par js/favoris.js -->
+          <button type="button" id="bouton-gerer-favoris" class="lien">Gérer</button>
+        </div>
+        <!-- Seulement les 8 favoris les plus utilisés -->
+        <div id="liste-pastilles" class="pastilles"></div>
+        <p id="aucun-favori" class="aide aide-gauche">Touche ☆ sur un plat de la liste pour l'ajouter à tes favoris.</p>
+        <!-- Petit message "✓ Skyr ajouté" qui disparaît tout seul -->
+        <p id="message-favori" class="message-favori cache"></p>
+      </div>
+
+      <!-- ===== LA SAISIE : une ligne vide en haut + le bouton ( + ) =====
+           inputmode="decimal" : le téléphone affiche le clavier des chiffres.
+           Case laissée vide = "X" = valeur inconnue. -->
+      <div class="saisie-plat">
+        <input type="text" id="saisie-nom" class="plat-nom" maxlength="60" placeholder="Nom du plat" autocomplete="off">
+        <!-- Les suggestions de favoris pendant que tu tapes le nom (js/favoris.js) -->
+        <ul id="suggestions-favoris" class="suggestions cache"></ul>
+        <div class="plat-valeurs">
+          <label class="valeur">
+            <span>kcal</span>
+            <input type="text" inputmode="decimal" id="saisie-kcal" placeholder="X" autocomplete="off">
+          </label>
+          <label class="valeur">
+            <span>Prot (g)</span>
+            <input type="text" inputmode="decimal" id="saisie-prot" placeholder="X" autocomplete="off">
+          </label>
+          <label class="valeur">
+            <span>Gluc (g)</span>
+            <input type="text" inputmode="decimal" id="saisie-gluc" placeholder="X" autocomplete="off">
+          </label>
+          <label class="valeur">
+            <span>Lip (g)</span>
+            <input type="text" inputmode="decimal" id="saisie-lip" placeholder="X" autocomplete="off">
+          </label>
+        </div>
+        <!-- Message d'erreur (caché au départ) -->
+        <p id="erreur-saisie" class="erreur cache"></p>
+        <button type="button" id="bouton-ajouter-plat" class="bouton-ajouter">
+          <span class="bouton-ajouter-rond">+</span>
+          <span>Ajouter</span>
+        </button>
+        <p class="aide">Laisse une case vide (X) si tu ne connais pas la valeur.</p>
+      </div>
+
+      <!-- ===== LA LISTE DES PLATS DU JOUR (remplie par js/nutrition.js) ===== -->
+      <p id="aucun-plat" class="texte-doux aucun-plat">Aucun plat noté pour ce jour.</p>
+      <ul id="liste-plats" class="liste-plats"></ul>
+
+      <!-- ===== LES TOTAUX DU JOUR, sous un trait ===== -->
+      <div class="totaux">
+        <!-- Les encadrés prennent une couleur selon l'objectif (js/objectifs.js) :
+             vert = dans l'objectif, rouge = insuffisant, orange = dépassé -->
+        <div class="totaux-principaux">
+          <div class="total" id="encadre-kcal">
+            <span class="total-valeur" id="total-kcal">0</span>
+            <span class="total-nom">kcal</span>
+            <span class="total-objectif" id="objectif-kcal"></span>
+          </div>
+          <div class="total" id="encadre-prot">
+            <span class="total-valeur" id="total-prot">0</span>
+            <span class="total-nom">g de protéines</span>
+            <span class="total-objectif" id="objectif-prot"></span>
+          </div>
+        </div>
+        <p class="totaux-secondaires">
+          Glucides : <strong id="total-gluc">0</strong> g · Lipides : <strong id="total-lip">0</strong> g
+        </p>
+        <!-- Prévient quand des valeurs inconnues (X) ne sont pas comptées -->
+        <p id="note-inconnues" class="aide cache"></p>
+
+        <!-- Le verdict du jour : "Diète tenue : OUI / NON" -->
+        <p id="verdict-diete" class="verdict"></p>
+
+        <!-- Ouvre la fenêtre des objectifs -->
+        <button type="button" id="bouton-objectifs" class="bouton-secondaire bouton-large">🎯 Mes objectifs de diète</button>
+      </div>
+    </section>
+
+    <!-- Onglet 3 : Historique (caché au démarrage) -->
+    <!-- Onglet "Poids" (caché au démarrage, rempli par js/poids.js) -->
+    <section id="onglet-poids" class="onglet cache">
+      <h2>⚖️ Poids</h2>
+
+      <!-- Le même jour que dans les autres onglets -->
+      <label class="choix-date">
+        <span>Jour :</span>
+        <input type="date" id="date-poids">
+      </label>
+
+      <!-- La saisie de la pesée du jour -->
+      <div class="saisie-poids">
+        <label class="champ">
+          <span class="champ-titre">Poids (kg)</span>
+          <input type="text" inputmode="decimal" id="champ-poids" placeholder="ex. 74,6" autocomplete="off">
+        </label>
+        <p id="erreur-poids" class="erreur cache"></p>
+        <div class="actions">
+          <button type="button" id="bouton-supprimer-poids" class="bouton-secondaire cache">Supprimer la pesée</button>
+          <button type="button" id="bouton-enregistrer-poids" class="bouton-principal">Enregistrer</button>
+        </div>
+      </div>
+
+      <!-- Le verdict du jour : poids, dans / hors objectif, reste jusqu'à la cible -->
+      <div id="verdict-poids" class="verdict-poids"></div>
+
+      <!-- Les écarts : depuis la semaine dernière, depuis la première pesée -->
+      <h3 class="titre-bloc">Évolution</h3>
+      <div id="ecarts-poids"></div>
+
+      <h3 class="titre-bloc">Poids — 14 derniers jours</h3>
+      <div id="graphique-poids" class="graphique"></div>
+      <p id="info-graphique-poids" class="info-graphique"></p>
+
+      <button type="button" id="bouton-objectif-poids" class="bouton-secondaire bouton-large">🎯 Mon objectif de poids</button>
+    </section>
+
+    <!-- Onglet "Bilan du jour" (caché au démarrage, rempli par js/bilan.js) -->
+    <section id="onglet-bilan" class="onglet cache">
+      <h2>🏅 Bilan du jour</h2>
+
+      <!-- Le même jour que dans les autres onglets -->
+      <label class="choix-date">
+        <span>Jour :</span>
+        <input type="date" id="date-bilan">
+      </label>
+
+      <!-- Le score en grand, sa médaille et sa couleur -->
+      <div id="carte-score" class="carte-score">
+        <div class="score-ligne">
+          <span id="score-valeur" class="score-valeur">0</span>
+          <span class="score-sur">/ 100</span>
+          <span id="score-medaille" class="score-medaille"></span>
+        </div>
+        <p id="score-texte" class="score-texte"></p>
+      </div>
+
+      <!-- La série en cours -->
+      <p id="serie" class="serie"></p>
+
+      <!-- Le détail par ligne -->
+      <h3 class="titre-bloc">Détail</h3>
+      <ul id="detail-score" class="detail-score"></ul>
+
+      <!-- La nutrition du jour face aux objectifs -->
+      <h3 class="titre-bloc">Nutrition</h3>
+      <div id="bilan-nutrition" class="bilan-nutrition"></div>
+
+      <!-- Le poids du jour (js/bilan.js) -->
+      <h3 class="titre-bloc">Poids</h3>
+      <div id="bilan-poids" class="bilan-nutrition"></div>
+
+      <!-- La courbe des calories des 7 derniers jours -->
+      <h3 class="titre-bloc">Calories — 7 derniers jours</h3>
+      <div id="graphique-7-jours" class="graphique"></div>
+      <!-- Le détail du point touché dans la courbe -->
+      <p id="info-graphique" class="info-graphique">Touche un jour de la courbe pour voir sa valeur.</p>
+    </section>
+
+    <!-- Onglet 4 : Historique (caché au démarrage) -->
+    <section id="onglet-historique" class="onglet cache">
+      <h2>📈 Historique</h2>
+
+      <!-- Le choix de l'échelle (js/historique.js) -->
+      <div class="choix-echelle">
+        <button type="button" class="bouton-echelle" data-echelle="semaine">Semaine</button>
+        <button type="button" class="bouton-echelle" data-echelle="mois">Mois</button>
+        <button type="button" class="bouton-echelle" data-echelle="annee">Année</button>
+      </div>
+
+      <!-- ◁ période précédente · titre · période suivante ▷ -->
+      <div class="navigation-periode">
+        <button type="button" id="periode-precedente" class="bouton-periode" aria-label="Période précédente">◁</button>
+        <span id="titre-periode" class="titre-periode"></span>
+        <button type="button" id="periode-suivante" class="bouton-periode" aria-label="Période suivante">▷</button>
+      </div>
+
+      <!-- Le score moyen, les médailles, la meilleure série -->
+      <div id="resume-historique"></div>
+
+      <h3 class="titre-bloc">Calendrier</h3>
+      <div id="calendrier" class="calendrier"></div>
+      <p class="legende-calendrier">
+        <span class="carre niveau-vert"></span> 80+
+        <span class="carre niveau-jaune"></span> 50–79
+        <span class="carre niveau-rouge"></span> &lt; 50
+        <span class="carre cal-non-rempli"></span> non rempli (0)
+      </p>
+      <p class="aide aide-gauche">Touche un jour pour voir son bilan, ou un mois pour l'ouvrir.</p>
+
+      <h3 class="titre-bloc">Calories</h3>
+      <div id="graphique-historique" class="graphique"></div>
+      <p id="info-graphique-historique" class="info-graphique"></p>
+
+      <h3 class="titre-bloc">Réussite par ligne</h3>
+      <ul id="stats-lignes" class="stats-lignes"></ul>
+
+      <h3 class="titre-bloc">Nutrition</h3>
+      <p id="stats-nutrition" class="stats-nutrition"></p>
+
+      <!-- Le poids sur la période (js/historique.js) -->
+      <h3 class="titre-bloc">Poids</h3>
+      <div id="stats-poids"></div>
+      <div id="graphique-poids-historique" class="graphique"></div>
+      <p id="info-graphique-poids-historique" class="info-graphique"></p>
+    </section>
+
+  </main>
+
+  <!-- ===== BARRE DE NAVIGATION : les 5 gros boutons en bas de l'écran =====
+       data-onglet indique quelle section chaque bouton doit afficher. -->
+  <nav class="navigation">
+    <button class="bouton-onglet actif" data-onglet="onglet-journee">
+      <span class="icone">📋</span>
+      <span>Journée</span>
+    </button>
+    <button class="bouton-onglet" data-onglet="onglet-nutrition">
+      <span class="icone">🍽️</span>
+      <span>Nutrition</span>
+    </button>
+    <button class="bouton-onglet" data-onglet="onglet-poids">
+      <span class="icone">⚖️</span>
+      <span>Poids</span>
+    </button>
+    <button class="bouton-onglet" data-onglet="onglet-bilan">
+      <span class="icone">🏅</span>
+      <span>Bilan</span>
+    </button>
+    <button class="bouton-onglet" data-onglet="onglet-historique">
+      <span class="icone">📈</span>
+      <span>Historique</span>
+    </button>
+  </nav>
+
+  <!-- ===== FENÊTRE "LIGNE" : créer ou modifier une ligne =====
+       <dialog> est une fenêtre qui s'affiche PAR-DESSUS la page.
+       Elle est invisible tant que js/lignes.js ne l'ouvre pas. -->
+  <dialog id="fenetre-ligne" class="fenetre">
+    <form id="formulaire-ligne">
+      <!-- Le titre change : "Nouvelle ligne" ou "Modifier la ligne" -->
+      <h3 id="titre-fenetre-ligne">Nouvelle ligne</h3>
+
+      <!-- 1. Le nom -->
+      <label class="champ">
+        <span class="champ-titre">Nom</span>
+        <input type="text" id="champ-nom" maxlength="40" placeholder="ex. Brosser les dents" autocomplete="off">
+      </label>
+      <!-- Message affiché si on valide sans nom (caché au départ) -->
+      <p id="erreur-nom" class="erreur cache">Donne un nom à la ligne.</p>
+
+      <!-- 2. La réponse : toujours binaire, fait / pas fait -->
+      <div class="champ">
+        <span class="champ-titre">Réponse</span>
+        <span class="apercu-reponse">
+          <span class="mini-rond fait">✓</span> Fait
+          <span class="mini-rond pas-fait">✗</span> Pas fait
+        </span>
+      </div>
+
+      <!-- 3. Le niveau d'importance, de 1 à 4, avec deux gros boutons − et + -->
+      <div class="champ">
+        <span class="champ-titre">Importance</span>
+        <div class="compteur">
+          <button type="button" id="niveau-moins" class="compteur-bouton" aria-label="Diminuer">−</button>
+          <output id="niveau-valeur" class="compteur-valeur">2</output>
+          <button type="button" id="niveau-plus" class="compteur-bouton" aria-label="Augmenter">+</button>
+        </div>
+      </div>
+      <!-- "Niveau 4 · vaut 10 points" (écrit par js/lignes.js) -->
+      <p id="explication-niveau" class="explication-niveau"></p>
+      <p class="aide">1 = 1 pt · 2 = 3 pts · 3 = 6 pts · 4 = 10 pts</p>
+
+      <!-- Les boutons du bas -->
+      <div class="actions">
+        <button type="button" id="bouton-annuler" class="bouton-secondaire">Annuler</button>
+        <!-- type="submit" : ce bouton "envoie" le formulaire (géré par js/lignes.js) -->
+        <button type="submit" id="bouton-valider" class="bouton-principal">Ajouter</button>
+      </div>
+
+      <!-- Visible seulement quand on modifie une ligne existante -->
+      <button type="button" id="bouton-supprimer" class="bouton-danger cache">Supprimer cette ligne</button>
+    </form>
+  </dialog>
+
+  <!-- ===== FENÊTRE "OBJECTIFS DE DIÈTE" ===== -->
+  <dialog id="fenetre-objectifs" class="fenetre">
+    <form id="formulaire-objectifs">
+      <h3>🎯 Objectifs de diète</h3>
+
+      <label class="champ">
+        <span class="champ-titre">Calories visées (kcal)</span>
+        <input type="text" inputmode="decimal" id="champ-objectif-kcal" placeholder="ex. 2200" autocomplete="off">
+      </label>
+
+      <label class="champ">
+        <span class="champ-titre">Marge acceptée (± %)</span>
+        <input type="text" inputmode="decimal" id="champ-objectif-marge" placeholder="ex. 10" autocomplete="off">
+      </label>
+      <!-- Montre en direct la fourchette calculée, ex. "Entre 1980 et 2420 kcal" -->
+      <p id="apercu-fourchette" class="aide"></p>
+
+      <label class="champ">
+        <span class="champ-titre">Protéines minimum (g)</span>
+        <input type="text" inputmode="decimal" id="champ-objectif-prot" placeholder="ex. 150" autocomplete="off">
+      </label>
+
+      <label class="champ">
+        <span class="champ-titre">S'applique à partir du</span>
+        <input type="date" id="champ-objectif-depuis">
+      </label>
+      <p class="aide">Les jours d'avant gardent leurs anciens objectifs.</p>
+
+      <p id="erreur-objectifs" class="erreur cache"></p>
+
+      <div class="actions">
+        <button type="button" id="bouton-annuler-objectifs" class="bouton-secondaire">Annuler</button>
+        <button type="submit" class="bouton-principal">Enregistrer</button>
+      </div>
+
+      <!-- L'historique des objectifs (rempli par js/objectifs.js) -->
+      <h4 class="sous-titre">Historique</h4>
+      <ul id="historique-objectifs" class="historique-objectifs"></ul>
+    </form>
+  </dialog>
+
+  <!-- ===== FENÊTRE "GÉRER MES FAVORIS" ===== -->
+  <dialog id="fenetre-favoris" class="fenetre">
+    <h3>⭐ Mes favoris</h3>
+
+    <!-- Recherche : la liste se filtre à chaque lettre tapée -->
+    <input type="search" id="recherche-favoris" class="recherche" placeholder="🔍 Rechercher un favori" autocomplete="off">
+
+    <!-- Le tri : deux boutons, celui qui est choisi est mis en avant -->
+    <div class="choix-tri">
+      <span>Trier :</span>
+      <button type="button" class="bouton-tri" data-tri="utilisation">Les plus utilisés</button>
+      <button type="button" class="bouton-tri" data-tri="nom">Par nom</button>
+    </div>
+
+    <!-- La liste est remplie par js/favoris.js -->
+    <ul id="liste-gestion-favoris" class="liste-gestion-favoris"></ul>
+    <p class="aide aide-gauche">＋ ajoute au jour affiché · ✎ modifie le favori · 🗑 le supprime.</p>
+    <div class="actions">
+      <button type="button" id="bouton-fermer-favoris" class="bouton-secondaire">Fermer</button>
+    </div>
+  </dialog>
+
+  <!-- ===== FENÊTRE "MON OBJECTIF DE POIDS" (js/poids.js) ===== -->
+  <dialog id="fenetre-objectif-poids" class="fenetre">
+    <form id="formulaire-objectif-poids">
+      <h3>🎯 Mon objectif de poids</h3>
+
+      <!-- Le choix du mode : les champs affichés changent selon le mode (js/poids.js) -->
+      <div class="choix-mode">
+        <button type="button" class="bouton-mode" data-mode="trajectoire">Trajectoire</button>
+        <button type="button" class="bouton-mode" data-mode="maintien">Maintien</button>
+      </div>
+
+      <!-- Trajectoire seulement : le poids de départ -->
+      <label class="champ seulement-trajectoire">
+        <span class="champ-titre">Poids de départ (kg)</span>
+        <input type="text" inputmode="decimal" id="champ-poids-depart" placeholder="ex. 77" autocomplete="off">
+      </label>
+
+      <!-- "Poids final" en Trajectoire, "Poids voulu" en Maintien -->
+      <label class="champ">
+        <span class="champ-titre" id="titre-champ-cible">Poids final (kg)</span>
+        <input type="text" inputmode="decimal" id="champ-poids-cible" placeholder="ex. 70" autocomplete="off">
+      </label>
+
+      <!-- Trajectoire seulement : le rythme -->
+      <label class="champ seulement-trajectoire">
+        <span class="champ-titre">Rythme (kg par mois)</span>
+        <input type="text" inputmode="decimal" id="champ-poids-rythme" placeholder="ex. 2" autocomplete="off">
+      </label>
+
+      <label class="champ">
+        <span class="champ-titre">Marge acceptée (± kg)</span>
+        <input type="text" inputmode="decimal" id="champ-poids-marge" placeholder="ex. 1" autocomplete="off">
+      </label>
+
+      <label class="champ">
+        <span class="champ-titre">S'applique à partir du</span>
+        <input type="date" id="champ-poids-depuis">
+      </label>
+
+      <!-- Aperçu en direct, ex. "−2 kg/mois : 70,0 kg atteint vers le 8 mars 2027" -->
+      <p id="apercu-fourchette-poids" class="apercu-objectif"></p>
+      <p class="aide">Les jours d'avant gardent leurs anciens objectifs.</p>
+
+      <p id="erreur-objectif-poids" class="erreur cache"></p>
+
+      <div class="actions">
+        <button type="button" id="bouton-annuler-objectif-poids" class="bouton-secondaire">Annuler</button>
+        <button type="submit" class="bouton-principal">Enregistrer</button>
+      </div>
+
+      <h4 class="sous-titre">Historique</h4>
+      <ul id="historique-objectifs-poids" class="historique-objectifs"></ul>
+    </form>
+  </dialog>
+
+  <!-- ===== FENÊTRE "SAUVEGARDE" : exporter / importer ===== -->
+  <dialog id="fenetre-sauvegarde" class="fenetre">
+    <h3>💾 Sauvegarde</h3>
+    <p class="texte-doux">Dernier export : <strong id="date-dernier-export">jamais</strong></p>
+    <!-- L'état de la protection du stockage (js/sauvegarde.js) -->
+    <p id="etat-protection" class="etat-protection"></p>
+
+    <!-- Exporter : télécharge un fichier avec toutes tes données -->
+    <button type="button" id="bouton-exporter" class="bouton-principal bouton-large">⬇️ Exporter mes données</button>
+    <p class="aide">Crée un fichier .json dans tes Téléchargements. Garde-le précieusement (ordinateur, mail, Drive…).</p>
+
+    <!-- Importer : le vrai champ "fichier" est caché, on le déclenche avec un joli bouton -->
+    <input type="file" id="champ-fichier-import" accept=".json,application/json" class="cache">
+    <button type="button" id="bouton-importer" class="bouton-secondaire bouton-large">⬆️ Importer un fichier</button>
+    <p class="aide">Remplace toutes les données de cet appareil par celles du fichier.</p>
+
+    <!-- Message de réussite ou d'erreur (caché au départ) -->
+    <p id="message-sauvegarde" class="message cache"></p>
+
+    <div class="actions">
+      <button type="button" id="bouton-fermer-sauvegarde" class="bouton-secondaire">Fermer</button>
+    </div>
+  </dialog>
+
+  <!-- ===== FENÊTRE DE CONFIRMATION (réutilisable) =====
+       Le titre, le texte et le bouton "Oui" sont remplis par js/confirmation.js
+       selon ce qu'on veut confirmer (supprimer une ligne, importer un fichier…). -->
+  <dialog id="fenetre-confirmation" class="fenetre">
+    <h3 id="titre-confirmation"></h3>
+    <p id="texte-confirmation"></p>
+    <div class="actions">
+      <button type="button" id="confirmation-non" class="bouton-secondaire">Annuler</button>
+      <button type="button" id="confirmation-oui" class="bouton-danger-plein"></button>
+    </div>
+  </dialog>
+
+  <!-- On charge le JavaScript EN DERNIER : ainsi, quand il s'exécute,
+       tous les éléments de la page existent déjà.
+       L'ORDRE compte : donnees.js d'abord (les autres s'en servent),
+       app.js en dernier (c'est lui qui démarre tout). -->
+  <script src="js/donnees.js"></script>
+  <script src="js/confirmation.js"></script>
+  <script src="js/journee.js"></script>
+  <script src="js/lignes.js"></script>
+  <script src="js/nutrition.js"></script>
+  <script src="js/objectifs.js"></script>
+  <script src="js/poids.js"></script>
+  <script src="js/favoris.js"></script>
+  <script src="js/score.js"></script>
+  <script src="js/graphique.js"></script>
+  <script src="js/bilan.js"></script>
+  <script src="js/historique.js"></script>
+  <script src="js/sauvegarde.js"></script>
+  <script src="js/mise-a-jour.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
